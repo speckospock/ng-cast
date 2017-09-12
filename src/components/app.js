@@ -2,7 +2,7 @@ angular.module('video-player')
 
   .component('app', {
     templateUrl: 'src/templates/app.html',
-    controller: function($scope, $http) {
+    controller: function($scope, $http, youTube) {
       this.videos = window.exampleVideoData;
       this.video = window.exampleVideoData[0];
       $scope.vid = this.video;
@@ -18,23 +18,10 @@ angular.module('video-player')
         this.video=$scope.vids[0];
       });
 
-      $http({
-        method: 'GET',
-        url: 'https://www.googleapis.com/youtube/v3/search',
-        params: {
-          q: 'Kurzgesagt',
-          part: 'snippet',
-          maxResults: 5,
-          key: window.YOUTUBE_API_KEY,
-          videoEmbeddable: true,
-          type: 'video',
-        },
-      }).then((response) => {
-        console.log(response);
-        $scope.vids = response.data.items;
-      }, () => {
-        console.log('hi');
+      youTube.getRepo("Kurzgesagt", window.YOUTUBE_API_KEY, (response) => {
+        $scope.vids = response;
       });
+
       console.log($http);
     }
   });
